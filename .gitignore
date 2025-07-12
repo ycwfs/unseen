@@ -1,0 +1,48 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*.so
+
+# Distribution / packaging
+.Python
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+*.egg-info/
+dist/
+build/
+*.whl
+
+# Pytest
+.cache
+pytest-debug.log
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# VS Code
+.vscode/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# Pyre type checker
+.pyre/
+
+# C extensions
+*.so
+
+# Cython
+*.cpp
+*.c
+
+# All pt files, includes subdirectories, subsubdirectories, etc.
+*.pt
+
+*.jpg
+
+*.txt
