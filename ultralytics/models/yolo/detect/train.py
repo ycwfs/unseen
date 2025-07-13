@@ -141,7 +141,6 @@ class DetectionTrainer(BaseTrainer):
 
     def plot_training_samples(self, batch, ni):
         """Plots training samples with their annotations."""
-        breakpoint()
         plot_images(
             images=batch["img"],
             batch_idx=batch["batch_idx"],

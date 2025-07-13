@@ -30,7 +30,10 @@ TDB
   - don't use rect mode （config in build yolo dataset）
   - check amp fitting in predownload path
   - need further adjust in get_flops
-- fit infrared image fusion (concat rgb 3 + ir 1 = 4, conv 4->32) (TBD)
-- data augment （copy small object region to blank space）
+- fit infrared image fusion (concat rgb 3 + ir 1 = 4, conv 4->32)
+- fit infrared image fusion (concat rgb 3->3 + ir 3->1 = 4, conv 4->32)
+- data augment （copy small object region to blank space）may not good
 - val data split（according to data distribution）
-- save infrared images batch（in plot_training_samples function）
+- plot infrared images batch（in plot_training_samples function）
+- fit infrared image infer (modify LoadImagesAndVideos function and pre,postprocess)
+- remove amp check

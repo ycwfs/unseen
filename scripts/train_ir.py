@@ -11,8 +11,8 @@ results = model.train(
   data='/data1/wangqiurui/code/competition/tianchi/unseen/yolov12/ultralytics/cfg/datasets/unseen_split.yaml',
   epochs=200, 
   augment=False,
-  patience=3,
-  batch=1, 
+  patience=5,
+  batch=48, 
   # cache=True,
   imgsz=[1280,720],
   degrees=0,
@@ -33,7 +33,7 @@ results = model.train(
   plots=True,
   save_period=10,
   rect=False,
-  project='yolos_rgb_ir_1280_splitval'
+  project='yolol_rgb_ir_1280_splitval_convconcatconv_fuse'
 )
 metrics = model.val()
 

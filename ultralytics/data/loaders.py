@@ -15,7 +15,7 @@ import requests
 import torch
 from PIL import Image
 
-from ultralytics.data.utils import FORMATS_HELP_MSG, IMG_FORMATS, VID_FORMATS
+from ultralytics.data.utils import FORMATS_HELP_MSG, IMG_FORMATS, VID_FORMATS, img2ir_paths
 from ultralytics.utils import IS_COLAB, IS_KAGGLE, LOGGER, ops
 from ultralytics.utils.checks import check_requirements
 from ultralytics.utils.patches import imread
@@ -349,7 +349,7 @@ class LoadImagesAndVideos:
             elif suffix in VID_FORMATS:
                 videos.append(f)
         ni, nv = len(images), len(videos)
-
+        self.irs = img2ir_paths(files)
         self.files = images + videos
         self.nf = ni + nv  # number of files
         self.ni = ni  # number of images
@@ -372,65 +372,141 @@ class LoadImagesAndVideos:
     def __next__(self):
         """Returns the next batch of images or video frames with their paths and metadata."""
         paths, imgs, info = [], [], []
-        while len(imgs) < self.bs:
-            if self.count >= self.nf:  # end of file list
-                if imgs:
-                    return paths, imgs, info  # return last partial batch
-                else:
-                    raise StopIteration
+        if self.irs:
+            while len(imgs) < self.bs:
+                if self.count >= self.nf:  # end of file list
+                    if imgs:
+                        return paths, imgs, info  # return last partial batch
+                    else:
+                        raise StopIteration
 
-            path = self.files[self.count]
-            if self.video_flag[self.count]:
-                self.mode = "video"
-                if not self.cap or not self.cap.isOpened():
-                    self._new_video(path)
+                path = self.files[self.count]
+                ir_path = self.irs[self.count]
+                if self.video_flag[self.count]:
+                    self.mode = "video"
+                    if not self.cap or not self.cap.isOpened():
+                        self._new_video(path)
 
-                success = False
-                for _ in range(self.vid_stride):
-                    success = self.cap.grab()
-                    if not success:
-                        break  # end of video or failure
+                    success = False
+                    for _ in range(self.vid_stride):
+                        success = self.cap.grab()
+                        if not success:
+                            break  # end of video or failure
 
-                if success:
-                    success, im0 = self.cap.retrieve()
                     if success:
-                        self.frame += 1
+                        success, im0 = self.cap.retrieve()
+                        if success:
+                            self.frame += 1
+                            paths.append(path)
+                            imgs.append(im0)
+                            info.append(f"video {self.count + 1}/{self.nf} (frame {self.frame}/{self.frames}) {path}: ")
+                            if self.frame == self.frames:  # end of video
+                                self.count += 1
+                                self.cap.release()
+                    else:
+                        # Move to the next file if the current video ended or failed to open
+                        self.count += 1
+                        if self.cap:
+                            self.cap.release()
+                        if self.count < self.nf:
+                            self._new_video(self.files[self.count])
+                else:
+                    # Handle image files (including HEIC)
+                    self.mode = "image"
+                    if path.split(".")[-1].lower() == "heic":
+                        # Load HEIC image using Pillow with pillow-heif
+                        check_requirements("pillow-heif")
+
+                        from pillow_heif import register_heif_opener
+
+                        register_heif_opener()  # Register HEIF opener with Pillow
+                        with Image.open(path) as img:
+                            im0 = cv2.cvtColor(np.asarray(img), cv2.COLOR_RGB2BGR)  # convert image to BGR nparray               
+                    else:
+                        im0 = imread(path)  # BGR
+
+                    if ir_path.split(".")[-1].lower() == "heic":
+                        # Load HEIC image using Pillow with pillow-heif
+                        check_requirements("pillow-heif")
+
+                        from pillow_heif import register_heif_opener
+
+                        register_heif_opener()  # Register HEIF opener with Pillow
+                        with Image.open(ir_path) as img:
+                            ir = cv2.cvtColor(np.asarray(img), cv2.COLOR_RGB2BGR)  # convert image to BGR nparray               
+                    else:
+                        ir = imread(ir_path)  # BGR
+                    
+                    if im0 is None:
+                        LOGGER.warning(f"WARNING ⚠️ Image Read Error {path}")
+                    else:
+                        paths.append(path)
+                        imgs.append([im0,ir])
+                        info.append(f"image {self.count + 1}/{self.nf} {path}: ")
+                    self.count += 1  # move to the next file
+                    if self.count >= self.ni:  # end of image list
+                        break
+        else:
+            while len(imgs) < self.bs:
+                if self.count >= self.nf:  # end of file list
+                    if imgs:
+                        return paths, imgs, info  # return last partial batch
+                    else:
+                        raise StopIteration
+
+                path = self.files[self.count]
+                if self.video_flag[self.count]:
+                    self.mode = "video"
+                    if not self.cap or not self.cap.isOpened():
+                        self._new_video(path)
+
+                    success = False
+                    for _ in range(self.vid_stride):
+                        success = self.cap.grab()
+                        if not success:
+                            break  # end of video or failure
+
+                    if success:
+                        success, im0 = self.cap.retrieve()
+                        if success:
+                            self.frame += 1
+                            paths.append(path)
+                            imgs.append(im0)
+                            info.append(f"video {self.count + 1}/{self.nf} (frame {self.frame}/{self.frames}) {path}: ")
+                            if self.frame == self.frames:  # end of video
+                                self.count += 1
+                                self.cap.release()
+                    else:
+                        # Move to the next file if the current video ended or failed to open
+                        self.count += 1
+                        if self.cap:
+                            self.cap.release()
+                        if self.count < self.nf:
+                            self._new_video(self.files[self.count])
+                else:
+                    # Handle image files (including HEIC)
+                    self.mode = "image"
+                    if path.split(".")[-1].lower() == "heic":
+                        # Load HEIC image using Pillow with pillow-heif
+                        check_requirements("pillow-heif")
+
+                        from pillow_heif import register_heif_opener
+
+                        register_heif_opener()  # Register HEIF opener with Pillow
+                        with Image.open(path) as img:
+                            im0 = cv2.cvtColor(np.asarray(img), cv2.COLOR_RGB2BGR)  # convert image to BGR nparray               
+                    else:
+                        im0 = imread(path)  # BGR
+                    
+                    if im0 is None:
+                        LOGGER.warning(f"WARNING ⚠️ Image Read Error {path}")
+                    else:
                         paths.append(path)
                         imgs.append(im0)
-                        info.append(f"video {self.count + 1}/{self.nf} (frame {self.frame}/{self.frames}) {path}: ")
-                        if self.frame == self.frames:  # end of video
-                            self.count += 1
-                            self.cap.release()
-                else:
-                    # Move to the next file if the current video ended or failed to open
-                    self.count += 1
-                    if self.cap:
-                        self.cap.release()
-                    if self.count < self.nf:
-                        self._new_video(self.files[self.count])
-            else:
-                # Handle image files (including HEIC)
-                self.mode = "image"
-                if path.split(".")[-1].lower() == "heic":
-                    # Load HEIC image using Pillow with pillow-heif
-                    check_requirements("pillow-heif")
-
-                    from pillow_heif import register_heif_opener
-
-                    register_heif_opener()  # Register HEIF opener with Pillow
-                    with Image.open(path) as img:
-                        im0 = cv2.cvtColor(np.asarray(img), cv2.COLOR_RGB2BGR)  # convert image to BGR nparray
-                else:
-                    im0 = imread(path)  # BGR
-                if im0 is None:
-                    LOGGER.warning(f"WARNING ⚠️ Image Read Error {path}")
-                else:
-                    paths.append(path)
-                    imgs.append(im0)
-                    info.append(f"image {self.count + 1}/{self.nf} {path}: ")
-                self.count += 1  # move to the next file
-                if self.count >= self.ni:  # end of image list
-                    break
+                        info.append(f"image {self.count + 1}/{self.nf} {path}: ")
+                    self.count += 1  # move to the next file
+                    if self.count >= self.ni:  # end of image list
+                        break
 
         return paths, imgs, info
 

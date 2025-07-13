@@ -120,18 +120,46 @@ class BasePredictor:
         Args:
             im (torch.Tensor | List(np.ndarray)): BCHW for tensor, [(HWC) x B] for list.
         """
-        not_tensor = not isinstance(im, torch.Tensor)
-        if not_tensor:
-            im = np.stack(self.pre_transform(im))
-            im = im[..., ::-1].transpose((0, 3, 1, 2))  # BGR to RGB, BHWC to BCHW, (n, 3, h, w)
-            im = np.ascontiguousarray(im)  # contiguous
-            im = torch.from_numpy(im)
+        if len(im[0]) == 1:
+            not_tensor = not isinstance(im, torch.Tensor)
+            if not_tensor:
+                im = np.stack(self.pre_transform(im))
+                im = im[..., ::-1].transpose((0, 3, 1, 2))  # BGR to RGB, BHWC to BCHW, (n, 3, h, w)
+                im = np.ascontiguousarray(im)  # contiguous
+                im = torch.from_numpy(im)
 
-        im = im.to(self.device)
-        im = im.half() if self.model.fp16 else im.float()  # uint8 to fp16/32
-        if not_tensor:
-            im /= 255  # 0 - 255 to 0.0 - 1.0
-        return im
+            im = im.to(self.device)
+            im = im.half() if self.model.fp16 else im.float()  # uint8 to fp16/32
+            if not_tensor:
+                im /= 255  # 0 - 255 to 0.0 - 1.0
+            return im
+        elif len(im[0]) > 1:
+            ir = [im[0][1]]; im = [im[0][0]]
+            not_tensor = not isinstance(im, torch.Tensor)
+            if not_tensor:
+                im = np.stack(self.pre_transform(im))
+                im = im[..., ::-1].transpose((0, 3, 1, 2))  # BGR to RGB, BHWC to BCHW, (n, 3, h, w)
+                im = np.ascontiguousarray(im)  # contiguous
+                im = torch.from_numpy(im)
+
+            im = im.to(self.device)
+            im = im.half() if self.model.fp16 else im.float()  # uint8 to fp16/32
+            if not_tensor:
+                im /= 255  # 0 - 255 to 0.0 - 1.0
+            
+            not_tensor = not isinstance(ir, torch.Tensor)
+            if not_tensor:
+                ir = np.stack(self.pre_transform(ir))
+                ir = ir[..., ::-1].transpose((0, 3, 1, 2))  # BGR to RGB, BHWC to BCHW, (n, 3, h, w)
+                ir = np.ascontiguousarray(ir)  # contiguous
+                ir = torch.from_numpy(ir)
+
+            ir = ir.to(self.device)
+            ir = ir.half() if self.model.fp16 else ir.float()  # uint8 to fp16/32
+            if not_tensor:
+                ir /= 255  # 0 - 255 to 0.0 - 1.0
+
+            return [im,ir]
 
     def inference(self, im, *args, **kwargs):
         """Runs inference on a given image using the specified model and arguments."""
@@ -263,7 +291,7 @@ class BasePredictor:
 
                 # Postprocess
                 with profilers[2]:
-                    self.results = self.postprocess(preds, im, im0s)
+                    self.results = self.postprocess(preds, im[0], [im0s[0][0]])
                 self.run_callbacks("on_predict_postprocess_end")
 
                 # Visualize, save, write results
@@ -276,7 +304,10 @@ class BasePredictor:
                         "postprocess": profilers[2].dt * 1e3 / n,
                     }
                     if self.args.verbose or self.args.save or self.args.save_txt or self.args.show:
-                        s[i] += self.write_results(i, Path(paths[i]), im, s)
+                        if len(im) == 1:
+                            s[i] += self.write_results(i, Path(paths[i]), im, s)
+                        else:
+                            s[i] += self.write_results(i, Path(paths[i]), im[0], s)
 
                 # Print batch results
                 if self.args.verbose:

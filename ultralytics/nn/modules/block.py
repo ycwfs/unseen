@@ -101,14 +101,20 @@ class MF(nn.Module):
 
     def __init__(self, c1, c2):
         super(MF, self).__init__()
-        self.conv1 = nn.Conv2d(c1, c2, 3, 1, 1)
-        self.conv2 = nn.Conv2d(c1, c2, 3, 1, 1)
+        # rgb 3->3; ir 3->1
+        # 3 + 1 = 4 -> 3
+        # self.conv = nn.Conv2d(c1, c2, 3, 1, 1)
+        self.conv_rgb = nn.Conv2d(c2, c2, 1, 1, 0)
+        self.conv_ir = nn.Conv2d(c2, 1, 1, 1, 0)
+        self.conv_fuse = nn.Conv2d(c1, c2, 1, 1, 0)
 
     def forward(self, x):
-        x1 = self.conv1(x[0])
-        x2 = self.conv2(x[1])
-        # ADD in channel dimension
-        return x1 + x2
+        # rgb = x[0]; ir = x[1][:,:1,...]
+        # xc = torch.cat([rgb,ir], dim=1)
+        rgb = x[0]; ir = x[1]
+        xc = torch.cat([self.conv_rgb(rgb), self.conv_ir(ir)], dim=1)
+        xc = self.conv_fuse(xc)
+        return xc
 
 
 class DFL(nn.Module):
