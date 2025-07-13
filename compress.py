@@ -32,16 +32,16 @@ if __name__ == '__main__':
     param_dict = {
         # origin
         'model': '/data1/wangqiurui/code/competition/tianchi/unseen/yolov12/yolos_rgb_1280/train/weights/best.pt',
-        'data':'/data1/wangqiurui/code/competition/tianchi/unseen/yolov12/ultralytics/cfg/datasets/unseen_augment.yaml',
+        'data':'/data1/wangqiurui/code/competition/tianchi/unseen/yolov12/ultralytics/cfg/datasets/unseen.yaml',
         'imgsz': [1280,723],
-        'epochs': 100,
-        'batch': 48,
+        'epochs': 200,
+        'batch': 16,
         'workers': 8,
         'cache': False,
         'optimizer': 'SGD',
         'device': '0',
         'close_mosaic': 0,
-        'project': '/data1/wangqiurui/code/competition/tianchi/unseen/yolov12/yolos_rgb_1280/prune_1280_938',
+        'project': '/data1/wangqiurui/code/competition/tianchi/unseen/yolov12/yolos_rgb_1280/prune_1280',
         'name': 'yolov12',
         'degrees': 1,
         'hsv_h': 0.015,
@@ -67,7 +67,7 @@ if __name__ == '__main__':
         'sl_model': None,
     }
     
-    # prune_model_path = compress(copy.deepcopy(param_dict))
-    prune_model_path = '/data1/wangqiurui/code/competition/tianchi/unseen/yolov12/yolos_rgb_1280/prune_1280_938/yolov12-prune/weights/prune.pt'
+    prune_model_path = compress(copy.deepcopy(param_dict))
+    # prune_model_path = '/data1/wangqiurui/code/competition/tianchi/unseen/yolov12/yolos_rgb_1280/prune_1280/yolov12-prune/weights/prune.pt'
     print(f'prune_model_path: {prune_model_path}')
     finetune(copy.deepcopy(param_dict), prune_model_path)

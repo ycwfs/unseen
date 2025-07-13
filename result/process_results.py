@@ -2,14 +2,14 @@ import os
 
 # Get the absolute path to the directory containing this script
 res_dir = os.path.dirname(os.path.abspath(__file__))
-pred_dir = "/data1/wangqiurui/code/competition/tianchi/unseen/yolov12/yolov11s_rgb_1280/1280_epoch10_res/labels"
+pred_dir = "/data1/wangqiurui/code/competition/tianchi/unseen/yolov12/yolos_rgb_1280/prune_1280_res/labels"
 # Define paths for the labels directory and the output file
 # labels_dir = os.path.join(pred_dir, "labels")
-output_file = os.path.join(res_dir, "result_srgb_yolo11_89_1280.txt")
+output_file = os.path.join(res_dir, "result_srgb_prune_80_1280.txt")
 
 # --- (Optional) Hardcoded model parameters for demonstration ---
 # Replace with your actual model's parameter and calculation amount
-model_params = "532105 19"  # Example: num_params GFLOPs
+model_params = "632105 19"  # Example: num_params GFLOPs
 
 # --- Main processing logic ---
 with open(output_file, "w") as f_out:

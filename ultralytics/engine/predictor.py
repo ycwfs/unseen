@@ -291,7 +291,10 @@ class BasePredictor:
 
                 # Postprocess
                 with profilers[2]:
-                    self.results = self.postprocess(preds, im[0], [im0s[0][0]])
+                    if len(im) == 1:
+                        self.results = self.postprocess(preds, im, im0s)
+                    else:
+                        self.results = self.postprocess(preds, im[0], [im0s[0][0]])
                 self.run_callbacks("on_predict_postprocess_end")
 
                 # Visualize, save, write results

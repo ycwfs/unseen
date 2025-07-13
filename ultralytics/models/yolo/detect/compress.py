@@ -447,7 +447,8 @@ class DetectionCompressor(BaseTrainer):
     def preprocess_batch(self, batch):
         """Preprocesses a batch of images by scaling and converting to float."""
         batch['img'] = batch['img'].to(self.device, non_blocking=True).float() / 255
-        batch['ir'] = batch['ir'].to(self.device, non_blocking=True).float() / 255
+        if 'ir' in batch:
+            batch['ir'] = batch['ir'].to(self.device, non_blocking=True).float() / 255
         return batch
 
     def set_model_attributes(self):
