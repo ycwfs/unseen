@@ -51,70 +51,73 @@ __all__ = (
     "SCDown",
     "TorchVision",
     "MF",
+    # "SMF"
 )
 
-# class MF(nn.Module):
-#     def __init__(self, c1, c2, reduction=16):
-#         super(MF, self).__init__()
-#         self.mask_map_r = nn.Conv2d(c1//2, 1, 1, 1, 0, bias=True)
-#         self.mask_map_i = nn.Conv2d(c1//2, 1, 1, 1, 0, bias=True)
-#         self.softmax = nn.Softmax(-1)
-#         self.bottleneck1 = nn.Conv2d(c1//2, c2//2, 3, 1, 1, bias=False)
-#         self.bottleneck2 = nn.Conv2d(c1//2, c2//2, 3, 1, 1, bias=False)
-#         self.se = SE_Block(c2, reduction)
-
-#     def forward(self, x):
-#         x_left_ori,x_right_ori = x[:, :3, :, :], x[:, 3:, :, :]
-#         x_left = x_left_ori * 0.5
-#         x_right = x_right_ori * 0.5
-
-#         x_mask_left = torch.mul(self.mask_map_r(x_left), x_left)
-#         x_mask_right = torch.mul(self.mask_map_i(x_right), x_right)
-
-#         out_IR = self.bottleneck1(x_mask_right + x_right_ori)
-#         out_RGB = self.bottleneck2(x_mask_left + x_left_ori)  # RGB
-#         out = self.se(torch.cat([out_RGB, out_IR], 1))
-
-#         return out
-
-# class SE_Block(nn.Module):
-#     def __init__(self, ch_in, reduction=16):
-#         super(SE_Block, self).__init__()
-#         self.avg_pool = nn.AdaptiveAvgPool2d(1)
-#         self.fc = nn.Sequential(
-#             nn.Linear(ch_in, ch_in // reduction, bias=False),
-#             nn.ReLU(inplace=True),
-#             nn.Linear(ch_in // reduction, ch_in, bias=False),
-#             nn.Sigmoid()
-#         )
-
-#     def forward(self, x):
-#         b, c, _, _ = x.size()
-#         y = self.avg_pool(x).view(b, c)
-#         y = self.fc(y).view(b, c, 1, 1)
-#         return x * y.expand_as(x)
-
 class MF(nn.Module):
-    """
-    Pre-Fusion module for rgb-ir feature fusion.
-    """
-
-    def __init__(self, c1, c2):
+    def __init__(self, c1, c2, reduction=2):
+        # 6,3
         super(MF, self).__init__()
-        # rgb 3->3; ir 3->1
-        # 3 + 1 = 4 -> 3
-        # self.conv = nn.Conv2d(c1, c2, 3, 1, 1)
-        self.conv_rgb = nn.Conv2d(c2, c2, 1, 1, 0)
-        self.conv_ir = nn.Conv2d(c2, 1, 1, 1, 0)
-        self.conv_fuse = nn.Conv2d(c1, c2, 1, 1, 0)
+        self.mask_map_r = nn.Conv2d(c2, 1, 1, 1, 0, bias=True)
+        self.mask_map_i = nn.Conv2d(c2, 1, 1, 1, 0, bias=True)
+        self.softmax = nn.Softmax(-1)
+        self.bottleneck1 = nn.Conv2d(c2, c1//2, 3, 1, 1, bias=False)
+        self.bottleneck2 = nn.Conv2d(c2, c1//2, 3, 1, 1, bias=False)
+        self.se = SE_Block(c1, reduction)
 
     def forward(self, x):
-        # rgb = x[0]; ir = x[1][:,:1,...]
-        # xc = torch.cat([rgb,ir], dim=1)
-        rgb = x[0]; ir = x[1]
-        xc = torch.cat([self.conv_rgb(rgb), self.conv_ir(ir)], dim=1)
-        xc = self.conv_fuse(xc)
-        return xc
+        x_left_ori,x_right_ori = x[0],x[1]
+        # x_left_ori,x_right_ori = rgb, ir
+        x_left = x_left_ori * 0.5
+        x_right = x_right_ori * 0.5
+
+        x_mask_left = torch.mul(self.mask_map_r(x_left), x_left)
+        x_mask_right = torch.mul(self.mask_map_i(x_right), x_right)
+
+        out_IR = self.bottleneck1(x_mask_right + x_right_ori)
+        out_RGB = self.bottleneck2(x_mask_left + x_left_ori)  # RGB
+        out = self.se(torch.cat([out_RGB, out_IR], 1))
+
+        return out
+
+class SE_Block(nn.Module):
+    def __init__(self, ch_in, reduction=16):
+        super(SE_Block, self).__init__()
+        self.avg_pool = nn.AdaptiveAvgPool2d(1)
+        self.fc = nn.Sequential(
+            nn.Linear(ch_in, ch_in // reduction, bias=False),
+            nn.ReLU(inplace=True),
+            nn.Linear(ch_in // reduction, ch_in, bias=False),
+            nn.Sigmoid()
+        )
+
+    def forward(self, x):
+        b, c, _, _ = x.size()
+        y = self.avg_pool(x).view(b, c)
+        y = self.fc(y).view(b, c, 1, 1)
+        return x * y.expand_as(x)
+
+# class MF(nn.Module):
+#     """
+#     Pre-Fusion module for rgb-ir feature fusion.
+#     """
+
+#     def __init__(self, c1, c2):
+#         super(MF, self).__init__()
+#         # rgb 3->3; ir 3->1
+#         # 3 + 1 = 4 -> 3
+#         # self.conv = nn.Conv2d(c1, c2, 3, 1, 1)
+#         self.conv_rgb = nn.Conv2d(c2, c2, 1, 1, 0)
+#         self.conv_ir = nn.Conv2d(c2, 1, 1, 1, 0)
+#         self.conv_fuse = nn.Conv2d(c1, c2, 1, 1, 0)
+
+#     def forward(self, x):
+#         # rgb = x[0]; ir = x[1][:,:1,...]
+#         # xc = torch.cat([rgb,ir], dim=1)
+#         rgb = x[0]; ir = x[1]
+#         xc = torch.cat([self.conv_rgb(rgb), self.conv_ir(ir)], dim=1)
+#         xc = self.conv_fuse(xc)
+#         return xc
 
 
 class DFL(nn.Module):

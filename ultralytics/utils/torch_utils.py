@@ -368,7 +368,7 @@ def get_flops(model, imgsz=640):
         model = de_parallel(model)
         p = next(model.parameters())
         if not isinstance(imgsz, list):
-            imgsz = [imgsz, imgsz]  # expand if int/float
+            imgsz = [640, 640]  # expand if int/float
         try:
             # Use stride size for input tensor
             # stride = max(int(model.stride.max()), 32) if hasattr(model, "stride") else 32  # max stride
@@ -381,7 +381,7 @@ def get_flops(model, imgsz=640):
             # Use actual image size for input tensor (i.e. required for RTDETR models)
             im = torch.empty((1, p.shape[1], *imgsz), device=p.device)  # input image in BCHW format
             ir = torch.empty((1, p.shape[1], *imgsz), device=p.device)  # input image in BCHW format
-            return thop.profile(deepcopy(model), inputs=[im,ir], verbose=False)[0] / 1e9 * 2  # imgsz GFLOPs
+            return thop.profile(deepcopy(model), inputs=(im,ir), verbose=False)[0] / 1e9 * 2  # imgsz GFLOPs
     except Exception as e:
         # If thop fails, return 0.0 FLOPs and log the error
         LOGGER.warning(f"WARNING ⚠️ Failed to compute FLOPs for model: {e}")

@@ -338,7 +338,7 @@ class DetectionModel(BaseModel):
             if self.yaml.get("ir", False) == False:
                 m.stride = torch.tensor([s / x.shape[-2] for x in _forward(torch.zeros(1, ch, s, s))])  # forward
             elif self.yaml.get("ir", False) == True:
-                m.stride = torch.tensor([s / x.shape[-2] for x in _forward([torch.zeros(1, ch, s, s), torch.zeros(1, ch, s, s)])])
+                m.stride = torch.tensor([s / x.shape[-2] for x in _forward([torch.zeros(1, 3, s, s), torch.zeros(1, 3, s, s)])])
             self.stride = m.stride
             m.bias_init()  # only run once
         else:

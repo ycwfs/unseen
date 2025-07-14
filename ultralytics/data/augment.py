@@ -1366,17 +1366,19 @@ class RandomHSV:
         """
         img = labels["img"]
         if self.hgain or self.sgain or self.vgain:
-            r = np.random.uniform(-1, 1, 3) * [self.hgain, self.sgain, self.vgain] + 1  # random gains
-            hue, sat, val = cv2.split(cv2.cvtColor(img, cv2.COLOR_BGR2HSV))
-            dtype = img.dtype  # uint8
+            # 50% chance to apply HSV augmentation
+            if random.random() < 0.5:
+                r = np.random.uniform(-1, 1, 3) * [self.hgain, self.sgain, self.vgain] + 1  # random gains
+                hue, sat, val = cv2.split(cv2.cvtColor(img, cv2.COLOR_BGR2HSV))
+                dtype = img.dtype  # uint8
 
-            x = np.arange(0, 256, dtype=r.dtype)
-            lut_hue = ((x * r[0]) % 180).astype(dtype)
-            lut_sat = np.clip(x * r[1], 0, 255).astype(dtype)
-            lut_val = np.clip(x * r[2], 0, 255).astype(dtype)
+                x = np.arange(0, 256, dtype=r.dtype)
+                lut_hue = ((x * r[0]) % 180).astype(dtype)
+                lut_sat = np.clip(x * r[1], 0, 255).astype(dtype)
+                lut_val = np.clip(x * r[2], 0, 255).astype(dtype)
 
-            im_hsv = cv2.merge((cv2.LUT(hue, lut_hue), cv2.LUT(sat, lut_sat), cv2.LUT(val, lut_val)))
-            cv2.cvtColor(im_hsv, cv2.COLOR_HSV2BGR, dst=img)  # no return needed
+                im_hsv = cv2.merge((cv2.LUT(hue, lut_hue), cv2.LUT(sat, lut_sat), cv2.LUT(val, lut_val)))
+                cv2.cvtColor(im_hsv, cv2.COLOR_HSV2BGR, dst=img)  # no return needed
         return labels
 
 
@@ -1453,6 +1455,8 @@ class RandomFlip:
             >>> flipped_labels = random_flip(labels)
         """
         img = labels["img"]
+        if 'ir' in labels:
+            ir = labels["ir"]
         instances = labels.pop("instances")
         instances.convert_bbox(format="xywh")
         h, w = img.shape[:2]
@@ -1462,14 +1466,20 @@ class RandomFlip:
         # Flip up-down
         if self.direction == "vertical" and random.random() < self.p:
             img = np.flipud(img)
+            if 'ir' in labels:
+                ir = np.flipud(ir)
             instances.flipud(h)
         if self.direction == "horizontal" and random.random() < self.p:
             img = np.fliplr(img)
+            if 'ir' in labels:
+                ir = np.fliplr(ir)
             instances.fliplr(w)
             # For keypoints
             if self.flip_idx is not None and instances.keypoints is not None:
                 instances.keypoints = np.ascontiguousarray(instances.keypoints[:, self.flip_idx, :])
         labels["img"] = np.ascontiguousarray(img)
+        if 'ir' in labels:
+            labels['ir'] = np.ascontiguousarray(ir)
         labels["instances"] = instances
         return labels
 
@@ -1855,22 +1865,23 @@ class Albumentations:
 
             # Transforms
             T = [
-                A.Blur(p=0.01),
+                A.Blur(p=0.02),
                 A.MedianBlur(p=0.01),
-                A.ToGray(p=0.01),
-                A.CLAHE(p=0.01),
-                A.RandomBrightnessContrast(p=0.0),
-                A.RandomGamma(p=0.0),
-                A.ImageCompression(quality_lower=75, p=0.0),
+                A.ToGray(p=0.0),
+                A.CLAHE(p=0.02),
+                A.RandomBrightnessContrast(p=0.01),
+                A.RandomGamma(p=0.01),
+                A.ImageCompression(quality_range=(75, 100), p=0.01),
             ]
 
             # Compose transforms
             self.contains_spatial = any(transform.__class__.__name__ in spatial_transforms for transform in T)
-            self.transform = (
-                A.Compose(T, bbox_params=A.BboxParams(format="yolo", label_fields=["class_labels"]))
-                if self.contains_spatial
-                else A.Compose(T)
-            )
+            # self.transform = (
+            #     A.Compose(T, bbox_params=A.BboxParams(format="yolo", label_fields=["class_labels"]))
+            #     if self.contains_spatial
+            #     else A.Compose(T)
+            # )
+            self.transform = A.Compose(T)
             if hasattr(self.transform, "set_random_seed"):
                 # Required for deterministic transforms in albumentations>=1.4.21
                 self.transform.set_random_seed(torch.initial_seed())

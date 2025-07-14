@@ -21,6 +21,9 @@ from .augment import (
     Format,
     Instances,
     LetterBox,
+    RandomHSV,
+    RandomFlip,
+    Albumentations,
     RandomLoadText,
     classify_augmentations,
     classify_transforms,
@@ -253,12 +256,19 @@ class YOLODataset(BaseDataset):
     def build_transforms(self, hyp=None):
         """Builds and appends transforms to the list."""
         # don't consider mosaic,mixup,flip aug when use infrared images
-        if self.augment:
+        if self.augment and not self.ir:
             hyp.mosaic = hyp.mosaic if self.augment and not self.rect else 0.0
             hyp.mixup = hyp.mixup if self.augment and not self.rect else 0.0
             transforms = v8_transforms(self, self.imgsz, hyp)
-        else:
-            transforms = Compose([LetterBox(new_shape=(self.imgsz, self.imgsz), scaleup=False)])
+        elif self.ir == True:
+            # transforms = Compose([LetterBox(new_shape=(self.imgsz, self.imgsz), scaleup=False)])
+            # rgb + ir augmentation
+            transforms = Compose([
+                Albumentations(p=1.0),
+                RandomFlip(direction="horizontal", p=hyp.fliplr, flip_idx=None),
+                RandomHSV(hgain=hyp.hsv_h, sgain=hyp.hsv_s, vgain=hyp.hsv_v),
+                LetterBox(new_shape=(736, 1280), scaleup=False)
+            ])
         transforms.append(
             Format(
                 bbox_format="xywh",

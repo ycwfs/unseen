@@ -62,6 +62,7 @@ class BaseDataset(Dataset):
         single_cls=False,
         classes=None,
         fraction=1.0,
+        ir=False,
     ):
         """Initialize BaseDataset with given configuration and options."""
         super().__init__()
@@ -79,6 +80,7 @@ class BaseDataset(Dataset):
         self.batch_size = batch_size
         self.stride = stride
         self.pad = pad
+        self.ir = ir
         if self.rect:
             assert self.batch_size is not None
             self.set_rectangle()
