@@ -16,10 +16,14 @@ adjust modal and data path in script first
 ```bash
 python ./scripts/train_ir.py
 ```
-# Compress
+# Compress and infer
 adjust modal and data path in script first
 ```bash
 python compress.py
+```
+modify ouput pt path to infer
+```bash
+python infer.py
 ```
 # Distillation
 TDB
@@ -41,6 +45,10 @@ TDB
 - train at (736,1280) latterbox size
 - fit Albumentations, HorizontalFlip, RandomHSV augmeantations
 - concat gray region into the ir region to fill the black region
+- directly fuse rgb and ir and finrtune(base on rgb)
+- fix transforms bug
+- fix evaluation bug
+- try maefuse rgb and ir(shit)
 
 # dif
   12686
