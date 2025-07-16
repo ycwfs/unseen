@@ -513,7 +513,7 @@ class AutoBackend(nn.Module):
         Returns:
             (tuple): Tuple containing the raw output tensor, and processed output for visualization (if visualize=True)
         """
-        if len(im) == 1:
+        if isinstance(im, torch.Tensor):
             b, ch, h, w = im.shape  # batch, channel, height, width
             if self.fp16 and im.dtype != torch.float16:
                 im = im.half()  # to FP16

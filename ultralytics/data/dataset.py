@@ -269,6 +269,8 @@ class YOLODataset(BaseDataset):
                 RandomHSV(hgain=hyp.hsv_h, sgain=hyp.hsv_s, vgain=hyp.hsv_v),
                 LetterBox(new_shape=(736, 1280), scaleup=False)
             ])
+        else:
+            transforms = Compose([LetterBox(new_shape=(self.imgsz, self.imgsz), scaleup=False)])
         transforms.append(
             Format(
                 bbox_format="xywh",

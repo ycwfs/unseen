@@ -41,3 +41,9 @@ TDB
 - train at (736,1280) latterbox size
 - fit Albumentations, HorizontalFlip, RandomHSV augmeantations
 - concat gray region into the ir region to fill the black region
+
+# dif
+  12686
+# TODO
+- smooth the filling operation
+- augmentation (ir+gray or ir+rgb) picture
