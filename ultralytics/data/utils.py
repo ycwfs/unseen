@@ -50,7 +50,7 @@ def img2ir_paths(img_paths):
     """Define ir paths as a function of image paths."""
     sa, sb = f"{os.sep}images{os.sep}", f"{os.sep}ir{os.sep}"  # /images/, /ir/ substrings
     ir_paths = [sb.join(x.rsplit(sa, 1)).rsplit(".", 1)[0] + ".jpg" for x in img_paths]
-    if os.path.exists(ir_paths[0]):
+    if os.path.exists(ir_paths[0]) and "/images/" in ir_paths[0]:
         return ir_paths
     return False
 

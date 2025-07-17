@@ -2,10 +2,10 @@ import os
 
 # Get the absolute path to the directory containing this script
 res_dir = os.path.dirname(os.path.abspath(__file__))
-pred_dir = "/data1/wangqiurui/code/competition/tianchi/unseen/yolov12/yolol_rgb_ir_1280_ch6_splitval_mask_fuse_hsvflip_ablu_concat/train_720_1280_res/labels"
+pred_dir = "/data1/wangqiurui/code/competition/tianchi/unseen/yolov12/yolol_rgb_1280_pic_fuse/finetune_720_1280_res7/labels"
 # Define paths for the labels directory and the output file
 # labels_dir = os.path.join(pred_dir, "labels")
-output_file = os.path.join(res_dir, "result_lrgb_83_1280_ch6_splitval_mask_fuse_hsvflip_ablu_concat.txt")
+output_file = os.path.join(res_dir, "result_lrgb_86_picfuse.txt")
 
 # --- (Optional) Hardcoded model parameters for demonstration ---
 # Replace with your actual model's parameter and calculation amount

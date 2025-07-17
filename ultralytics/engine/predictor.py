@@ -120,7 +120,7 @@ class BasePredictor:
         Args:
             im (torch.Tensor | List(np.ndarray)): BCHW for tensor, [(HWC) x B] for list.
         """
-        if len(im[0]) == 1:
+        if len(im) == 1:
             not_tensor = not isinstance(im, torch.Tensor)
             if not_tensor:
                 im = np.stack(self.pre_transform(im))
@@ -133,7 +133,7 @@ class BasePredictor:
             if not_tensor:
                 im /= 255  # 0 - 255 to 0.0 - 1.0
             return im
-        elif len(im[0]) > 1:
+        elif len(im) > 1:
             ir = [im[0][1]]; im = [im[0][0]]
             not_tensor = not isinstance(im, torch.Tensor)
             if not_tensor:

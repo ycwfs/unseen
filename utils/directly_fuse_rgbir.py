@@ -120,9 +120,9 @@ def batch_process_images(ir_folder, rgb_folder, save_folder, max_workers=4):
 if __name__ == "__main__":
     # 设置路径
     base_path = '/data1/wangqiurui/code/ossutil-v1.7.19-linux-amd64/rgb_unseen_test/train'
-    ir_folder = os.path.join(base_path, 'ir')
-    rgb_folder = os.path.join(base_path, 'images')
-    save_folder = os.path.join(base_path, 'images_aug')
+    ir_folder = os.path.join(base_path, 'irf')
+    rgb_folder = os.path.join(base_path, 'imageso')
+    save_folder = os.path.join(base_path, 'images')
     
     # 检查文件夹是否存在
     if not os.path.exists(ir_folder):
