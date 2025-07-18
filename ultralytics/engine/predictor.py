@@ -34,6 +34,8 @@ import platform
 import re
 import threading
 from pathlib import Path
+import pandas as pd
+import os
 
 import cv2
 import numpy as np
@@ -253,6 +255,20 @@ class BasePredictor:
         # Setup model
         if not self.model:
             self.setup_model(model)
+        
+        if self.args.task == "classify":
+            self.save_path = f"{self.data}/{self.args.model.split('/')[-3]}.csv"
+            if os.path.exists(self.save_path):
+                # result.csv -> result1.csv, result2.csv -> result3.csv
+                base, ext = os.path.splitext(self.save_path)
+                i = 1
+                while os.path.exists(self.save_path):
+                    self.save_path = f"{base}{i}{ext}"
+                    i += 1
+
+            labelcsv = pd.read_csv('/data1/wangqiurui/code/competition/xf/medicine/chinese_herbal_medicine.csv')
+            # id category columns
+            self.category2id = {row['category']: row['id'] for _, row in labelcsv.iterrows()}
 
         with self._lock:  # for thread-safe inference
             # Setup source every time predict is called
@@ -315,6 +331,9 @@ class BasePredictor:
                 # Print batch results
                 if self.args.verbose:
                     LOGGER.info("\n".join(s))
+                
+                if self.args.task == "classify":
+                    self.save_for_medicine()  # save csv file contain ImageID and top one label id columns
 
                 self.run_callbacks("on_predict_batch_end")
                 yield from self.results
@@ -336,6 +355,25 @@ class BasePredictor:
             s = f"\n{nl} label{'s' * (nl > 1)} saved to {self.save_dir / 'labels'}" if self.args.save_txt else ""
             LOGGER.info(f"Results saved to {colorstr('bold', self.save_dir)}{s}")
         self.run_callbacks("on_predict_end")
+
+    def save_for_medicine(self):
+        # save csv file contain ImageID and top one label id columns
+        if not os.path.exists(self.save_path):
+            df = pd.DataFrame(columns=["ImageID", "label"])
+            for i, result in enumerate(self.results):
+                # use append method to add new row
+                label_id = result.probs.top1
+                convert_label_id = self.category2id.get(result.names.get(label_id,None), None)
+                df = pd.DataFrame({"ImageID": [result.path.split('/')[-1]], "label": [convert_label_id]})
+            df.to_csv(self.save_path, index=False)
+        else:
+            df = pd.read_csv(self.save_path)
+            for i, result in enumerate(self.results):
+                # use append method to add new row
+                label_id = result.probs.top1
+                convert_label_id = self.category2id.get(result.names.get(label_id, None), None)
+                df = pd.concat([df, pd.DataFrame({"ImageID": [result.path.split('/')[-1]], "label": [convert_label_id]})], ignore_index=True)
+            df.to_csv(self.save_path, index=False)
 
     def setup_model(self, model, verbose=True):
         """Initialize YOLO model with given parameters and set it to evaluation mode."""

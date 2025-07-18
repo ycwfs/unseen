@@ -499,7 +499,23 @@ class LoadImagesAndVideos:
                         im0 = imread(path)  # BGR
                     
                     if im0 is None:
-                        LOGGER.warning(f"WARNING ⚠️ Image Read Error {path}")
+                        LOGGER.warning(f"WARNING ⚠️ Image Read Error {path}, using PIL to load it and expand to 3 channels.")
+                        import cv2
+                        import PIL
+                        import numpy as np
+                        try:
+                            p = PIL.Image.open(path)
+                            p = np.array(p)
+                            # 1 -> 3 channels
+                            if p.ndim == 2:
+                                p = np.stack([p] * 3, axis=-1)
+                                paths.append(path)
+                                imgs.append(p)
+                                info.append(f"image {self.count + 1}/{self.nf} {path}: ")
+                            else:
+                                print(f"Image {path} is {p.shape} dim.")
+                        except Exception as e:
+                            LOGGER.warning(f"WARNING ⚠️ Failed to read image {path} with PIL: {e}")
                     else:
                         paths.append(path)
                         imgs.append(im0)
