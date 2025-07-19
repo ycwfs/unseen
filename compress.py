@@ -31,18 +31,19 @@ def finetune(param_dict, prune_model_path):
 if __name__ == '__main__':
     param_dict = {
         # origin
-        'model': '/data1/wangqiurui/code/competition/tianchi/unseen/yolov12/yolol_rgb_1280_pic_fuse/finetune_from_yolol/weights/best.pt',
-        'data':'/data1/wangqiurui/code/competition/tianchi/unseen/yolov12/ultralytics/cfg/datasets/unseen_img_fuse.yaml',
+        'model': '/data1/wangqiurui/code/competition/tianchi/unseen/yolov12/yolol_rgb/train/weights/best.pt',
+        'data':'/data1/wangqiurui/code/competition/tianchi/unseen/yolov12/ultralytics/cfg/datasets/unseen_test.yaml',
         'imgsz': [1280,723],
-        'epochs': 200,
+        'epochs': 2000,
+        'save_period': 100,
         'batch': 24,
         'workers': 8,
         'cache': False,
         'optimizer': 'SGD',
         'device': '0',
         'close_mosaic': 0,
-        'project': '/data1/wangqiurui/code/competition/tianchi/unseen/yolov12/yolol_rgb_1280_pic_fuse',
-        'name': 'finetune_from_yolol_compress',
+        'project': '/data1/wangqiurui/code/competition/tianchi/unseen/yolov12/yolol_rgb',
+        'name': 'compress_yolol',
         'degrees': 1,
         'hsv_h': 0.015,
         'hsv_s': 0.5,
@@ -60,7 +61,7 @@ if __name__ == '__main__':
         # prune
         'prune_method': 'lamp',
         'global_pruning': True,
-        'speed_up': 11,
+        'speed_up': 18,
         'reg': 0.0005,
         'sl_epochs': 500,
         'sl_hyp': '/data1/wangqiurui/code/competition/tianchi/unseen/yolov12/ultralytics/cfg/hyp.scratch.sl.yaml',
@@ -69,18 +70,19 @@ if __name__ == '__main__':
 
     fine_param_dict = {
         # origin
-        'model': '/data1/wangqiurui/code/competition/tianchi/unseen/yolov12/yolol_rgb_1280_pic_fuse/finetune_from_yolol/weights/best.pt',
-        'data':'/data1/wangqiurui/code/competition/tianchi/unseen/yolov12/ultralytics/cfg/datasets/unseen_img_fuse.yaml',
+        'model': '/data1/wangqiurui/code/competition/tianchi/unseen/yolov12/yolol_rgb/train/weights/best.pt',
+        'data':'/data1/wangqiurui/code/competition/tianchi/unseen/yolov12/ultralytics/cfg/datasets/unseen.yaml',
         'imgsz': [1280,723],
-        'epochs': 200,
+        'epochs': 2000,
+        'save_period': 100,
         'batch': 24,
         'workers': 8,
         'cache': False,
         'optimizer': 'SGD',
         'device': '0',
         'close_mosaic': 0,
-        'project': '/data1/wangqiurui/code/competition/tianchi/unseen/yolov12/yolol_rgb_1280_pic_fuse',
-        'name': 'finetune_from_yolol_compress',
+        'project': '/data1/wangqiurui/code/competition/tianchi/unseen/yolov12/yolol_rgb',
+        'name': 'compress_yolol',
         'degrees': 1,
         'hsv_h': 0.015,
         'hsv_s': 0.5,
@@ -98,14 +100,14 @@ if __name__ == '__main__':
         # prune
         'prune_method': 'lamp',
         'global_pruning': True,
-        'speed_up': 11,
+        'speed_up': 18,
         'reg': 0.0005,
         'sl_epochs': 500,
         'sl_hyp': '/data1/wangqiurui/code/competition/tianchi/unseen/yolov12/ultralytics/cfg/hyp.scratch.sl.yaml',
         'sl_model': None,
     }
 
-    prune_model_path = compress(copy.deepcopy(param_dict))
+    prune_model_path = compress(copy.deepcopy(fine_param_dict))
     # prune_model_path = '/data1/wangqiurui/code/competition/tianchi/unseen/yolov12/yolos_rgb_1280/prune_1280/yolov12-prune/weights/prune.pt'
     print(f'prune_model_path: {prune_model_path}')
     finetune(copy.deepcopy(fine_param_dict), prune_model_path)

@@ -132,7 +132,7 @@ prune_method:
 speed_up: 2.0
 global_pruning: False
 max_sparsity: 1.0
-iterative_steps: 2000
+iterative_steps: 20000
 reg: 0.0005
 delta_reg: 0.0001
 sl_epochs: 100
@@ -141,3 +141,20 @@ sl_hyp: ultralytics/cfg/hyp.scratch.sl.yaml
 reg_decay_type: linear # constant, linear, step
 reg_decay: 0.1
 reg_decay_step: 10
+
+# Distill settings
+prune_model: True
+teacher_weights:
+teacher_cfg:
+kd_loss_type: logical # 'logical', 'feature', 'all'
+kd_loss_decay: constant # 'cosine', 'linear', 'cosine_epoch', 'linear_epoch', 'constant'
+
+# logical distillation settings
+logical_loss_type: l2 # 'l1', 'l2', 'BCKD'
+logical_loss_ratio: 1.0
+
+# feature distillation settings
+teacher_kd_layers: 15,18,21
+student_kd_layers: 15,18,21
+feature_loss_type: cwd # 'mimic', 'mgd', 'cwd', 'chsim', 'sp'
+feature_loss_ratio: 1.0
