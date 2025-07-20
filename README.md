@@ -26,7 +26,11 @@ modify ouput pt path to infer
 python infer.py
 ```
 # Distillation
-TDB
+modify teacher and student path, distill config in script first
+```bash
+python distill.py
+```
+
 # Development
 - fit infrared image fusion（conv + add）
   - through dataloader（check if ir path exist）
@@ -50,8 +54,21 @@ TDB
 - fix evaluation bug
 - try maefuse rgb and ir(shit)
 
+# Finial decision
+- only use rgb image
+- yolos train(1280,1280) infer(736,1280) 
+- prune 40G flops 9 Mb params -> to 19G flops
+- distill teacher(yolol 0.8141) -> student(yolov12s_rgb 0.7571)
+
 # dif
-  12686
+  ~~12686~~
 # TODO
-- smooth the filling operation
-- augmentation (ir+gray or ir+rgb) picture
+- ~~smooth the filling operation~~
+- ~~augmentation (ir+gray or ir+rgb) picture~~
+- use full dataset to prune the yolo12s_rgb model
+- continue finetune student(yolov12s_rgb 0.7571)
+- exp on distillation layers
+
+# tips
+- x = box + cls + dfl loss
+- 0.5 < feature loss < 1.5x

@@ -143,7 +143,7 @@ reg_decay: 0.1
 reg_decay_step: 10
 
 # Distill settings
-prune_model: True
+prune_model: False
 teacher_weights:
 teacher_cfg:
 kd_loss_type: logical # 'logical', 'feature', 'all'

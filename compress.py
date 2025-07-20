@@ -73,7 +73,7 @@ if __name__ == '__main__':
         'model': '/data1/wangqiurui/code/competition/tianchi/unseen/yolov12/yolol_rgb/train/weights/best.pt',
         'data':'/data1/wangqiurui/code/competition/tianchi/unseen/yolov12/ultralytics/cfg/datasets/unseen.yaml',
         'imgsz': [1280,723],
-        'epochs': 2000,
+        'epochs': 200,
         'save_period': 100,
         'batch': 24,
         'workers': 8,
