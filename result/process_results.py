@@ -2,10 +2,10 @@ import os
 import random
 # Get the absolute path to the directory containing this script
 res_dir = os.path.dirname(os.path.abspath(__file__))
-pred_dir = "/data1/wangqiurui/code/competition/tianchi/unseen/yolov12/yolos_rgb_1280/prune_1280_81_res/labels"
+pred_dir = "/data1/wangqiurui/code/competition/tianchi/unseen/yolov12/yolos_rgb_1280/distill_ls_1280_all_halffl_4heads/res_86/labels"
 # Define paths for the labels directory and the output file
 # labels_dir = os.path.join(pred_dir, "labels")
-output_file = os.path.join(res_dir, "result_srgb_prune_81_1280.txt")
+output_file = os.path.join(res_dir, "result_srgb_distill_1280_0.86val_25thr.txt")
 
 # --- (Optional) Hardcoded model parameters for demonstration ---
 # Replace with your actual model's parameter and calculation amount
@@ -19,11 +19,12 @@ with open(output_file, "w") as f_out:
     # Get all .txt files from the labels directory
     label_files = [f for f in os.listdir(pred_dir) if f.endswith(".txt")]
 
-    num_files = len(label_files)
+    processed_files = []
+    num_files = 0
     # Process each label file
     for filename in label_files:
         image_name = os.path.splitext(filename)[0] + ".jpg"
-        
+        txt_name = os.path.splitext(filename)[0] + ".txt"
         # Initialize a list to store detection data for the current image
         detections = []
 
@@ -40,7 +41,7 @@ with open(output_file, "w") as f_out:
                     if confidence > 0.25:
                         # Append relevant detection data to the list
                         detections.extend([x_center, y_center, width, height, confidence, int(class_id)])
-                    # else:
+                    # elif 0.2 < confidence < 0.25:
                     #     # random confident(0.25,0.8]
                     #     conf = round(random.uniform(0.26, 0.8),6)
                     #     detections.extend([x_center, y_center, width, height, conf, int(class_id)])
@@ -50,6 +51,8 @@ with open(output_file, "w") as f_out:
             # Format the output line with the image name followed by detection data
             output_line = f"{image_name} {' '.join(map(str, detections))}\n"
             f_out.write(output_line)
+            processed_files.append(txt_name)
+            num_files += 1
     
     nn = 0
     # process none detections
@@ -60,7 +63,7 @@ with open(output_file, "w") as f_out:
         else:
             filename = f'0{i}.txt'
             
-        if os.path.exists(os.path.join(pred_dir, filename)):
+        if os.path.exists(os.path.join(pred_dir, filename)) and filename in processed_files:
             continue
         else:
             image_name = os.path.splitext(filename)[0] + ".jpg"

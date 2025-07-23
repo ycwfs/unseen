@@ -25,7 +25,7 @@ if __name__ == '__main__':
         'name':'distill_ls_1280_all_halffl_4heads',
         'hsv_h': 0.015,
         'hsv_s': 0.5,
-        'hsv_v': 0.62, # lightness
+        'hsv_v': 0.6, # lightness
         'translate': 0.0, # 边缘，部分物体 Translates the image horizontally and vertically by a fraction of the image size, aiding in learning to detect partially visible objects.
         'flipud': 0, # 上下翻转在这个场景不太适合 Flips the image upside down with the specified probability, increasing the data variability without affecting the object's characteristics.
         'fliplr': 0.8,
