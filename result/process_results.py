@@ -5,11 +5,11 @@ res_dir = os.path.dirname(os.path.abspath(__file__))
 pred_dir = "/data1/wangqiurui/code/competition/tianchi/unseen/yolov12/yolos_rgb_1280/distill_ls_1280_all_halffl_4heads/res_86/labels"
 # Define paths for the labels directory and the output file
 # labels_dir = os.path.join(pred_dir, "labels")
-output_file = os.path.join(res_dir, "result_srgb_distill_1280_0.86val_25thr.txt")
+output_file = os.path.join(res_dir, "result_srgb_distill_1280_0.86val_28thr.txt")
 
 # --- (Optional) Hardcoded model parameters for demonstration ---
 # Replace with your actual model's parameter and calculation amount
-model_params = "532105 19"  # Example: num_params GFLOPs
+model_params = "2744943 19"  # Example: num_params GFLOPs
 
 # --- Main processing logic ---
 with open(output_file, "w") as f_out:
@@ -38,7 +38,7 @@ with open(output_file, "w") as f_out:
                     class_id, x_center, y_center, width, height, confidence = map(float, parts)
 
                     # Filter detections by confidence score
-                    if confidence > 0.25:
+                    if confidence >= 0.28:
                         # Append relevant detection data to the list
                         detections.extend([x_center, y_center, width, height, confidence, int(class_id)])
                     # elif 0.2 < confidence < 0.25:

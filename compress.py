@@ -75,7 +75,7 @@ if __name__ == '__main__':
         'imgsz': [1280,723],
         'epochs': 200,
         'save_period': 20,
-        'batch': 32,
+        'batch': 52,
         'workers': 8,
         'cache': False,
         'optimizer': 'SGD',
