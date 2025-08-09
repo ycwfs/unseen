@@ -132,7 +132,7 @@ prune_method:
 speed_up: 2.0
 global_pruning: False
 max_sparsity: 1.0
-iterative_steps: 20000
+iterative_steps: 999999
 reg: 0.0005
 delta_reg: 0.0001
 sl_epochs: 100

@@ -3,10 +3,10 @@ mode: train
 model: /data1/wangqiurui/code/competition/tianchi/unseen/yolov12/yolos_rgb_1280/train/weights/best.pt
 data: /data1/wangqiurui/code/competition/tianchi/unseen/yolov12/ultralytics/cfg/datasets/unseen.yaml
 ir: true
-epochs: 200
+epochs: 400
 time: null
 patience: 0
-batch: 52
+batch: 50
 imgsz:
 - 1280
 - 723
@@ -26,7 +26,7 @@ deterministic: true
 single_cls: false
 rect: false
 cos_lr: false
-close_mosaic: 5
+close_mosaic: 10
 resume: false
 amp: true
 fraction: 1.0
@@ -111,7 +111,7 @@ prune_method: lamp
 speed_up: 2.3
 global_pruning: true
 max_sparsity: 1.0
-iterative_steps: 20000
+iterative_steps: 999999
 reg: 0.0005
 delta_reg: 0.0001
 sl_epochs: 500
