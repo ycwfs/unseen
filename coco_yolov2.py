@@ -7,8 +7,8 @@ from datetime import datetime
 # ----------------------------
 # 获取当前时间并格式化为字符串，比如：20250604_153045
 timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
-coco_pred_json = "/data1/wangqiurui/code/competition/tianchi/unseen/yolov12/result/coco_predictions_s_20250726_120134.json"  # 你的预测结果
-image_dir = "/data1/wangqiurui/code/ossutil-v1.7.19-linux-amd64/rgb_unseen/val/images"                   # 图像目录（用于读取图像宽高）
+coco_pred_json = "/data1/code/competition/tianchi/unseen/yolov12/result/coco_predictions_s_20250726_120134.json"  # 你的预测结果
+image_dir = "/data1/code/ossutil-v1.7.19-linux-amd64/rgb_unseen/val/images"                   # 图像目录（用于读取图像宽高）
 output_label_dir = f"./result/yolo_preds_{timestamp}"           # 输出目录
 
 os.makedirs(output_label_dir, exist_ok=True)

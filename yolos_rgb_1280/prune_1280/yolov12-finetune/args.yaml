@@ -1,7 +1,7 @@
 task: detect
 mode: train
-model: /data1/wangqiurui/code/competition/tianchi/unseen/yolov12/yolos_rgb_1280/prune_1280/yolov12-prune/weights/prune.pt
-data: /data1/wangqiurui/code/competition/tianchi/unseen/yolov12/ultralytics/cfg/datasets/unseen.yaml
+model: /data1/code/competition/tianchi/unseen/yolov12/yolos_rgb_1280/prune_1280/yolov12-prune/weights/prune.pt
+data: /data1/code/competition/tianchi/unseen/yolov12/ultralytics/cfg/datasets/unseen.yaml
 epochs: 200
 time: null
 patience: 100
@@ -14,7 +14,7 @@ save_period: -1
 cache: false
 device: '0'
 workers: 8
-project: /data1/wangqiurui/code/competition/tianchi/unseen/yolov12/yolos_rgb_1280/prune_1280
+project: /data1/code/competition/tianchi/unseen/yolov12/yolos_rgb_1280/prune_1280
 name: yolov12-finetune
 exist_ok: false
 pretrained: true
@@ -115,8 +115,8 @@ reg: 0.0005
 delta_reg: 0.0001
 sl_epochs: 500
 sl_model: null
-sl_hyp: /data1/wangqiurui/code/competition/tianchi/unseen/yolov12/ultralytics/cfg/hyp.scratch.sl.yaml
+sl_hyp: /data1/code/competition/tianchi/unseen/yolov12/ultralytics/cfg/hyp.scratch.sl.yaml
 reg_decay_type: linear
 reg_decay: 0.1
 reg_decay_step: 10
-save_dir: /data1/wangqiurui/code/competition/tianchi/unseen/yolov12/yolos_rgb_1280/prune_1280/yolov12-finetune
+save_dir: /data1/code/competition/tianchi/unseen/yolov12/yolos_rgb_1280/prune_1280/yolov12-finetune

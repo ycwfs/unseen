@@ -12,7 +12,7 @@ from datetime import datetime
 # [720x1280]
 # 获取当前时间并格式化为字符串，比如：20250604_153045
 timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
-image_dir = "/data1/wangqiurui/code/ossutil-v1.7.19-linux-amd64/rgb_unseen/val/images"
+image_dir = "/data1/code/ossutil-v1.7.19-linux-amd64/rgb_unseen/val/images"
 output_json = f"./result/coco_predictions_s_{timestamp}.json"
 slice_height = 360  #使用768比512效果要差一个点左右
 slice_width = 640
@@ -23,7 +23,7 @@ overlap_ratio = 0   #使用0.2效果比0.5,0.1好
 # ----------------------------
 detection_model = AutoDetectionModel.from_pretrained(
     model_type='ultralytics',
-    model_path="/data1/wangqiurui/code/competition/tianchi/unseen/yolov12/yolos_rgb_1280/distill_ls_1280_all_halffl_4heads/weights/best.pt",
+    model_path="/data1/code/competition/tianchi/unseen/yolov12/yolos_rgb_1280/distill_ls_1280_all_halffl_4heads/weights/best.pt",
     confidence_threshold=0.25,  #用0.2有效果，比0.25好，尺寸为1408训练的情况下。
     device="cuda:1",
 )

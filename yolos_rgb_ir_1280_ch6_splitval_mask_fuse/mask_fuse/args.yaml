@@ -1,7 +1,7 @@
 task: detect
 mode: train
-model: /data1/wangqiurui/code/competition/tianchi/unseen/yolov12/ultralytics/cfg/models/v12/yolov12sir_6ch.yaml
-data: /data1/wangqiurui/code/competition/tianchi/unseen/yolov12/ultralytics/cfg/datasets/unseen_split.yaml
+model: /data1/code/competition/tianchi/unseen/yolov12/ultralytics/cfg/models/v12/yolov12sir_6ch.yaml
+data: /data1/code/competition/tianchi/unseen/yolov12/ultralytics/cfg/datasets/unseen_split.yaml
 epochs: 200
 time: null
 patience: 5

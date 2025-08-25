@@ -390,7 +390,7 @@ class DatasetSplitter:
         print(f"新验证集: {len(val_images)} 张图像")
 
 def main():
-    dataset_path = '/data1/wangqiurui/code/ossutil-v1.7.19-linux-amd64/rgb_unseen'
+    dataset_path = '/data1/code/ossutil-v1.7.19-linux-amd64/rgb_unseen'
     val_ratio = 0.2  # 验证集比例
     
     print(f"数据集路径: {dataset_path}")

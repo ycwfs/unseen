@@ -10,8 +10,8 @@ from ultralytics.models.yolo.detect.distill import DetectionDistiller
 if __name__ == '__main__':
     param_dict = {
         # origin
-        'model': '/data1/wangqiurui/code/competition/tianchi/unseen/yolov12/yolos_rgb_1280/prune_1280/yolov12-finetune/weights/best.pt',
-        'data':'/data1/wangqiurui/code/competition/tianchi/unseen/yolov12/ultralytics/cfg/datasets/unseen.yaml',
+        'model': '/data1/code/competition/tianchi/unseen/yolov12/yolos_rgb_1280/prune_1280/yolov12-finetune/weights/best.pt',
+        'data':'/data1/code/competition/tianchi/unseen/yolov12/ultralytics/cfg/datasets/unseen.yaml',
         'imgsz': [736, 1280],
         'epochs': 300,
         'batch': 52,
@@ -21,7 +21,7 @@ if __name__ == '__main__':
         'device': '0',
         'close_mosaic': 20,
         # 'amp': False, # 如果蒸馏损失为nan，请把amp设置为False
-        'project':'/data1/wangqiurui/code/competition/tianchi/unseen/yolov12/yolos_rgb_1280',
+        'project':'/data1/code/competition/tianchi/unseen/yolov12/yolos_rgb_1280',
         'name':'distill_xs_1280_all_halffl_4heads',
         'hsv_h': 0.015,
         'hsv_s': 0.5,
@@ -39,8 +39,8 @@ if __name__ == '__main__':
         "save_period": 20,
         # distill
         'prune_model': True,
-        'teacher_weights': '/data1/wangqiurui/code/competition/tianchi/unseen/yolov12/ckpt/yolox-best.pt',
-        'teacher_cfg': '/data1/wangqiurui/code/competition/tianchi/unseen/yolov12/ultralytics/cfg/models/v12/yolov12x.yaml',
+        'teacher_weights': '/data1/code/competition/tianchi/unseen/yolov12/ckpt/yolox-best.pt',
+        'teacher_cfg': '/data1/code/competition/tianchi/unseen/yolov12/ultralytics/cfg/models/v12/yolov12x.yaml',
         'kd_loss_type': 'all',
         'kd_loss_decay': 'linear',
         

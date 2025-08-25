@@ -2,7 +2,7 @@ import os
 import random
 # Get the absolute path to the directory containing this script
 res_dir = os.path.dirname(os.path.abspath(__file__))
-pred_dir = "/data1/wangqiurui/code/competition/tianchi/unseen/yolov12/yolos_rgb_1280/val2_res_938/labels"
+pred_dir = "/data1/code/competition/tianchi/unseen/yolov12/yolos_rgb_1280/val2_res_938/labels"
 # Define paths for the labels directory and the output file
 # labels_dir = os.path.join(pred_dir, "labels")
 output_file = os.path.join(res_dir, "result_srgb_1280_0.938val2_30thr.txt")

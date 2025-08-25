@@ -1,7 +1,7 @@
 task: detect
 mode: train
-model: /data1/wangqiurui/code/competition/tianchi/unseen/yolov12/yolos_rgb_1280/prune_1280/yolov12-finetune/weights/best.pt
-data: /data1/wangqiurui/code/competition/tianchi/unseen/yolov12/ultralytics/cfg/datasets/unseen.yaml
+model: /data1/code/competition/tianchi/unseen/yolov12/yolos_rgb_1280/prune_1280/yolov12-finetune/weights/best.pt
+data: /data1/code/competition/tianchi/unseen/yolov12/ultralytics/cfg/datasets/unseen.yaml
 ir: false
 epochs: 200
 time: null
@@ -13,7 +13,7 @@ save_period: 20
 cache: false
 device: '0'
 workers: 8
-project: /data1/wangqiurui/code/competition/tianchi/unseen/yolov12/yolos_rgb_1280
+project: /data1/code/competition/tianchi/unseen/yolov12/yolos_rgb_1280
 name: distill_ls_1280_all1
 exist_ok: false
 pretrained: true
@@ -119,8 +119,8 @@ reg_decay_type: linear
 reg_decay: 0.1
 reg_decay_step: 10
 prune_model: true
-teacher_weights: /data1/wangqiurui/code/competition/tianchi/unseen/yolov12/yolol_rgb/train/weights/best.pt
-teacher_cfg: /data1/wangqiurui/code/competition/tianchi/unseen/yolov12/ultralytics/cfg/models/v12/yolov12l.yaml
+teacher_weights: /data1/code/competition/tianchi/unseen/yolov12/yolol_rgb/train/weights/best.pt
+teacher_cfg: /data1/code/competition/tianchi/unseen/yolov12/ultralytics/cfg/models/v12/yolov12l.yaml
 kd_loss_type: all
 kd_loss_decay: linear
 logical_loss_type: BCKD
@@ -129,7 +129,7 @@ teacher_kd_layers: 14,17,20
 student_kd_layers: 14,17,20
 feature_loss_type: cwd
 feature_loss_ratio: 1.0
-save_dir: /data1/wangqiurui/code/competition/tianchi/unseen/yolov12/yolos_rgb_1280/distill_ls_1280_all1
+save_dir: /data1/code/competition/tianchi/unseen/yolov12/yolos_rgb_1280/distill_ls_1280_all1
 
 
     #   Epoch    GPU_mem   box_loss   cls_loss   dfl_loss   log_loss   fea_loss  Instances       Size

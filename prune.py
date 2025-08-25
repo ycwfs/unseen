@@ -66,10 +66,10 @@ from ultralytics.nn.modules import (
 from ultralytics.nn.modules.block import PSABlock, AAttn
 
 # Load the model
-# yolo_wrapper = YOLO('/data1/wangqiurui/code/competition/tianchi/unseen/yolov12/yolov12l.pt')
+# yolo_wrapper = YOLO('/data1/code/competition/tianchi/unseen/yolov12/yolov12l.pt')
 
 # Extract the actual PyTorch model
-model = torch.load('/data1/wangqiurui/code/competition/tianchi/unseen/yolov12/yolov12l.pt')
+model = torch.load('/data1/code/competition/tianchi/unseen/yolov12/yolov12l.pt')
 model = model['ema' if model.get('ema') else 'model'].float()
 # for p in model.parameters():
 #     p.requires_grad_(True)

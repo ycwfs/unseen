@@ -1,7 +1,7 @@
 task: detect
 mode: train
 model: yolov12s.pt
-data: /data1/wangqiurui/code/competition/tianchi/unseen/yolov12/ultralytics/cfg/datasets/unseen.yaml
+data: /data1/code/competition/tianchi/unseen/yolov12/ultralytics/cfg/datasets/unseen.yaml
 epochs: 200
 time: null
 patience: 100

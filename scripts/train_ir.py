@@ -4,12 +4,12 @@ import torch
 import torch.nn as nn
 from pathlib import Path
 from copy import deepcopy
-model = YOLO('/data1/wangqiurui/code/competition/tianchi/unseen/yolov12/ultralytics/cfg/models/v12/yolov12mir_6ch.yaml')
+model = YOLO('/data1/code/competition/tianchi/unseen/yolov12/ultralytics/cfg/models/v12/yolov12mir_6ch.yaml')
 
 # model.info(detailed=True, verbose=True, imgsz=[1280,723])
 results = model.train(
   ir=True,
-  data='/data1/wangqiurui/code/competition/tianchi/unseen/yolov12/ultralytics/cfg/datasets/unseen_split.yaml',
+  data='/data1/code/competition/tianchi/unseen/yolov12/ultralytics/cfg/datasets/unseen_split.yaml',
   epochs=200, 
   augment=False,
   patience=5,

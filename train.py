@@ -4,12 +4,12 @@ import torch
 import torch.nn as nn
 from pathlib import Path
 from copy import deepcopy
-model = YOLO('/data1/wangqiurui/code/competition/tianchi/unseen/yolov12/yolos_rgb_1280/train/weights/best.pt')
+model = YOLO('/data1/code/competition/tianchi/unseen/yolov12/yolos_rgb_1280/train/weights/best.pt')
 
 breakpoint()
 model.info(detailed=True, verbose=True, imgsz=[1280,723])
 results = model.train(
-  data='/data1/wangqiurui/code/competition/tianchi/unseen/yolov12/ultralytics/cfg/datasets/unseen_augment.yaml',
+  data='/data1/code/competition/tianchi/unseen/yolov12/ultralytics/cfg/datasets/unseen_augment.yaml',
   epochs=50, 
   batch=48, 
   # cache=True,

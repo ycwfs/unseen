@@ -1,7 +1,7 @@
 task: detect
 mode: train
 model: yolov12x.pt
-data: /data1/wangqiurui/code/competition/tianchi/unseen/yolov12/ultralytics/cfg/datasets/unseen.yaml
+data: /data1/code/competition/tianchi/unseen/yolov12/ultralytics/cfg/datasets/unseen.yaml
 epochs: 600
 time: null
 patience: 100
@@ -103,4 +103,4 @@ erasing: 0.4
 crop_fraction: 1.0
 cfg: null
 tracker: botsort.yaml
-save_dir: /data1/wangqiurui/code/competition/tianchi/unseen/yolov12/runs/detect/train5
+save_dir: /data1/code/competition/tianchi/unseen/yolov12/runs/detect/train5

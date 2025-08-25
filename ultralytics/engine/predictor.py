@@ -266,7 +266,7 @@ class BasePredictor:
                     self.save_path = f"{base}{i}{ext}"
                     i += 1
 
-            labelcsv = pd.read_csv('/data1/wangqiurui/code/competition/xf/medicine/chinese_herbal_medicine.csv')
+            labelcsv = pd.read_csv('/data1/code/competition/xf/medicine/chinese_herbal_medicine.csv')
             # id category columns
             self.category2id = {row['category']: row['id'] for _, row in labelcsv.iterrows()}
 

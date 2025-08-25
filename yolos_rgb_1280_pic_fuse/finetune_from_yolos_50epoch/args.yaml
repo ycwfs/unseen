@@ -1,7 +1,7 @@
 task: detect
 mode: train
-model: /data1/wangqiurui/code/competition/tianchi/unseen/yolov12/yolos_rgb_1280_pic_fuse/finetune_from_yolos/weights/best.pt
-data: /data1/wangqiurui/code/competition/tianchi/unseen/yolov12/ultralytics/cfg/datasets/unseen_img_fuse.yaml
+model: /data1/code/competition/tianchi/unseen/yolov12/yolos_rgb_1280_pic_fuse/finetune_from_yolos/weights/best.pt
+data: /data1/code/competition/tianchi/unseen/yolov12/ultralytics/cfg/datasets/unseen_img_fuse.yaml
 ir: false
 epochs: 200
 time: null

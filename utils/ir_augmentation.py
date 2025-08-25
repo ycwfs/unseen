@@ -6,9 +6,9 @@ from tqdm import tqdm
 import traceback
 
 # Define input and output directories
-rgb_dir = '/data1/wangqiurui/code/ossutil-v1.7.19-linux-amd64/rgb_unseen_test/train/imageso'
-ir_dir = '/data1/wangqiurui/code/ossutil-v1.7.19-linux-amd64/rgb_unseen_test/train/iro'
-output_dir = '/data1/wangqiurui/code/ossutil-v1.7.19-linux-amd64/rgb_unseen_test/train/irf'
+rgb_dir = '/data1/code/ossutil-v1.7.19-linux-amd64/rgb_unseen_test/train/imageso'
+ir_dir = '/data1/code/ossutil-v1.7.19-linux-amd64/rgb_unseen_test/train/iro'
+output_dir = '/data1/code/ossutil-v1.7.19-linux-amd64/rgb_unseen_test/train/irf'
 
 # Create output directory if it doesn't exist
 os.makedirs(output_dir, exist_ok=True)

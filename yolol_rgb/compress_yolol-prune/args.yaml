@@ -1,7 +1,7 @@
 task: detect
 mode: train
-model: /data1/wangqiurui/code/competition/tianchi/unseen/yolov12/yolol_rgb/train/weights/best.pt
-data: /data1/wangqiurui/code/competition/tianchi/unseen/yolov12/ultralytics/cfg/datasets/unseen_test.yaml
+model: /data1/code/competition/tianchi/unseen/yolov12/yolol_rgb/train/weights/best.pt
+data: /data1/code/competition/tianchi/unseen/yolov12/ultralytics/cfg/datasets/unseen_test.yaml
 ir: true
 epochs: 2000
 time: null
@@ -15,7 +15,7 @@ save_period: 100
 cache: false
 device: '0'
 workers: 8
-project: /data1/wangqiurui/code/competition/tianchi/unseen/yolov12/yolol_rgb
+project: /data1/code/competition/tianchi/unseen/yolov12/yolol_rgb
 name: compress_yolol-prune
 exist_ok: false
 pretrained: true
@@ -116,8 +116,8 @@ reg: 0.0005
 delta_reg: 0.0001
 sl_epochs: 500
 sl_model: null
-sl_hyp: /data1/wangqiurui/code/competition/tianchi/unseen/yolov12/ultralytics/cfg/hyp.scratch.sl.yaml
+sl_hyp: /data1/code/competition/tianchi/unseen/yolov12/ultralytics/cfg/hyp.scratch.sl.yaml
 reg_decay_type: linear
 reg_decay: 0.1
 reg_decay_step: 10
-save_dir: /data1/wangqiurui/code/competition/tianchi/unseen/yolov12/yolol_rgb/compress_yolol-prune
+save_dir: /data1/code/competition/tianchi/unseen/yolov12/yolol_rgb/compress_yolol-prune

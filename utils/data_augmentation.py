@@ -91,7 +91,7 @@ class DatasetAnalyzer:
                     f'{size:.4f}', ha='center', va='bottom')
         
         plt.tight_layout()
-        plt.savefig('/data1/wangqiurui/code/competition/tianchi/unseen/class_distribution.png', 
+        plt.savefig('/data1/code/competition/tianchi/unseen/class_distribution.png', 
                    dpi=300, bbox_inches='tight')
         plt.show()
     
@@ -384,8 +384,8 @@ class DataAugmenter:
         return augmented_count
 
 def main():
-    dataset_path = '/data1/wangqiurui/code/ossutil-v1.7.19-linux-amd64/rgb_unseen'
-    output_path = '/data1/wangqiurui/code/ossutil-v1.7.19-linux-amd64/rgb_unseen_augmented'
+    dataset_path = '/data1/code/ossutil-v1.7.19-linux-amd64/rgb_unseen'
+    output_path = '/data1/code/ossutil-v1.7.19-linux-amd64/rgb_unseen_augmented'
     
     print("=== 数据集类别分布分析 ===")
     
