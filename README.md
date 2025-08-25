@@ -9,29 +9,40 @@ python dataset_splitter.py
 ```
 # Config Adjust
 adjust modal and data config first
-- ./ultralytics/cfg/datasets/unseen_split.yaml
-- ./ultralytics/cfg/models/v12/yolov12sir.yaml
+- ./ultralytics/cfg/datasets/unseen.yaml
+- ./ultralytics/cfg/models/v12/yolov12s.yaml
 # Finetune YOLOV12
 adjust modal and data path in script first
 ```bash
-python ./scripts/train_ir.py
+python ./scripts/train.py
 ```
-# Compress and infer
+# Compress
 adjust modal and data path in script first
 ```bash
 python compress.py
 ```
-modify ouput pt path to infer
-```bash
-python infer.py
-```
+
 # Distillation
 modify teacher and student path, distill config in script first
 ```bash
 python distill.py
 ```
 
-# Development
+# Infer
+modify ouput pt path to infer
+```bash
+python infer.py
+```
+
+# Process
+modify pred_dir, and get final submit csv
+```bash
+cd result
+python process_results.py
+```
+
+
+<!-- # Development
 - fit infrared image fusion（conv + add）
   - through dataloader（check if ir path exist）
   - don't augment when use infrared image
@@ -71,4 +82,4 @@ python distill.py
 
 # tips
 - x = box + cls + dfl loss
-- 0.5 < feature loss < 1.5x
+- 0.5 < feature loss < 1.5x -->
